@@ -512,8 +512,8 @@ if uploaded_file:
                 'Defending_Self_Out_Points', 'Defending_All_Out_Points',               # 10
 
                 # --- RAID ACTION DETAILS ---
-                'Number_of_Raiders', 'Raider_Self_Out',
-                'Defenders_Touched_or_Caught', 'Half'                                   # 4
+                'Court_Entry', 'Number_of_Raiders', 'Raider_Self_Out',
+                'Defenders_Touched_or_Caught', 'Half'                                   # 5
             ]
 
             # Add empty new columns
@@ -540,10 +540,10 @@ if uploaded_file:
                 "Raiding_Team_Points_Pre", "Defending_Team_Points_Pre", "Zone_of_Action",                     # 21
 
                 # 3. Player & Team Info
-                "Raider_Name", "Player_ID",
+                "Raider_Name", "Court_Entry", "Player_ID",
                 "Raider_ID", "Raiding_Team_ID",
                 "Raiding_Team_Name", "Defending_Team_ID",
-                "Defending_Team_Name",                                                                          # 7
+                "Defending_Team_Name",                                                                          # 8
 
                 # 4. Defenders’ Info
                 "Number_of_Defenders", "Defender_Position",
@@ -1195,6 +1195,7 @@ if uploaded_file:
         except Exception as e:
             sys.stdout = sys.__stdout__
             st.error(f"❌ An error occurred: {e}")
+
 
 
 
