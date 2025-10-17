@@ -1033,10 +1033,10 @@ if uploaded_file:
             # --- QC 19: When Outcome = 'Successful' or 'Unsuccessful', Zone_of_Action must not be empty ---
 
             # Filter rows where Outcome is 'Successful' or 'Unsuccessful'
-            mask = df['Outcome'].isin(['Successful', 'Unsuccessful'])
+            zone_mask = df['Outcome'].isin(['Successful', 'Unsuccessful'])
 
             # Check for empty Zone_of_Action in those rows
-            empty_zone = df[mask & df['Zone_of_Action'].isna()]
+            empty_zone = df[zone_mask & df['Zone_of_Action'].isna()]
 
             if not empty_zone.empty:
                 for _, row in empty_zone.iterrows():
@@ -1195,6 +1195,7 @@ if uploaded_file:
         except Exception as e:
             sys.stdout = sys.__stdout__
             st.error(f"❌ An error occurred: {e}")
+
 
 
 
