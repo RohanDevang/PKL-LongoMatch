@@ -1028,16 +1028,16 @@ if uploaded_file:
 
                     elif row['Bonus'] == 'No' and (row['Type_of_Bonus'] != '' and not pd.isnull(row['Type_of_Bonus'])):
                         print(f"❌ {row['Event_Number']}: Bonus is 'No' but Type_of_Bonus should be null.\n")
-
+                        
 
             # --- QC 19: When Outcome = 'Successful' or 'Unsuccessful', Zone_of_Action must not be empty ---
 
             # Filter rows where Outcome is 'Successful' or 'Unsuccessful'
             zone_mask = df['Outcome'].isin(['Successful', 'Unsuccessful'])
-
-            # Check for empty Zone_of_Action in those rows
-            empty_zone = df[zone_mask & df['Zone_of_Action'].isna()]
-
+            
+            # Check for empty Zone_of_Action in those rows (now handles NaN, empty strings, and whitespace)
+            empty_zone = df[zone_mask & (df['Zone_of_Action'].isna() | (df['Zone_of_Action'].astype(str).str.strip() == ''))]
+            
             if not empty_zone.empty:
                 for _, row in empty_zone.iterrows():
                     print(f"❌ {row['Event_Number']}: →  Zone_of_Action is empty.\n")
@@ -1195,6 +1195,7 @@ if uploaded_file:
         except Exception as e:
             sys.stdout = sys.__stdout__
             st.error(f"❌ An error occurred: {e}")
+
 
 
 
