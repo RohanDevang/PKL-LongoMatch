@@ -522,46 +522,55 @@ if uploaded_file:
 
             
             # ---------------- New Logical Order ----------------
+
             new_order = [
-
                 # 1. Raid Details & Identification
-                "Season_ID", "Tournament_ID", "Match_No",
-                "Match_ID", "Event_Number", "Match_Raid_Number",
-                "Team_Raid_Number", "Raid_Number",
-                "Half", "Time", "Raid_Length",                                                               # 11
-
-                # 2. Raid Outcome & Scoring
-                "Outcome", "All_Out", "Bonus", "Type_of_Bonus", "Technical_Point", "Raider_Self_Out",
-                "Raiding_Touch_Points", "Raiding_Bonus_Points",
-                "Raiding_Self_Out_Points", "Raiding_All_Out_Points", "Raiding_Team_Points",
-                "Defending_Capture_Points", "Defending_Bonus_Points",
-                "Defending_Self_Out_Points", "Defending_All_Out_Points", "Defending_Team_Points",
-                "Number_of_Raiders", "Defenders_Touched_or_Caught",
-                "Raiding_Team_Points_Pre", "Defending_Team_Points_Pre", "Zone_of_Action",                     # 21
-
-                # 3. Player & Team Info
-                "Raider_Name", "Court_Entry", "Player_ID",
-                "Raider_ID", "Raiding_Team_ID",
-                "Raiding_Team_Name", "Defending_Team_ID",
-                "Defending_Team_Name",                                                                          # 8
-
-                # 4. Defenders’ Info
-                "Number_of_Defenders", "Defender_Position",
+                "Tournament_ID", "Season_ID", "Match_No", "Match_ID", "Event_Number",
+                "Match_Raid_Number", "Team_Raid_Number",
+            
+                # 2. Pre-Raid Points
+                "Raiding_Team_Points_Pre", "Defending_Team_Points_Pre",
+            
+                # 3. Time & Half
+                "Half", "Time",
+            
+                # 4. Team & Raider Info
+                "Raiding_Team_ID", "Raiding_Team_Name", "Raider_ID", "Raider_Name",
+                "Court_Entry", "Number_of_Raiders", "Number_of_Defenders",
+            
+                # 5. Raid Details
+                "Raid_Number", "Raid_Length", "Outcome", "Bonus", "Type_of_Bonus",
+            
+                # 6. Raiding Team Points
+                "Raiding_Team_Points", "Raiding_Touch_Points", "Raiding_Bonus_Points",
+                "Raiding_Self_Out_Points", "Raiding_All_Out_Points",
+            
+                # 7. Defending Team Points
+                "Defending_Team_Points", "Defending_Capture_Points", "Defending_Bonus_Points",
+                "Defending_Self_Out_Points", "Defending_All_Out_Points",
+            
+                # 8. Zone & Team Info
+                "Zone_of_Action", "Defending_Team_ID", "Defending_Team_Name",
+            
+                # 9. Defenders Info
+                "Defenders_Touched_or_Caught", "Defender_Position",
                 "Defender_1", "Defender_1_Name", "Defender_2", "Defender_2_Name",
                 "Defender_3", "Defender_3_Name", "Defender_4", "Defender_4_Name",
-                "Defender_5", "Defender_5_Name", "Defender_6", "Defender_6_Name",                              # 17
-                "Defender_7", "Defender_7_Name",
-                "Number_of_Defenders_Self_Out",                                                               
+                "Defender_5", "Defender_5_Name", "Defender_6", "Defender_6_Name",
+                "Defender_7", "Defender_7_Name", "Number_of_Defenders_Self_Out",
             
-                # 5. Skills & Actions
-                "Attacking_Skill", "Defensive_Skill", "QoD_Skill",
-                "Counter_Action_Skill", "Tie_Break_Raids",                                                     # 5
-
-                # 6. Video & Event Metadata
-                "Video_Link", "Video", "Event", "YC_Extra", "Team_ID"                                           # 5
+                # 10. Raider & Skills
+                "Raider_Self_Out", "Attacking_Skill", "Defensive_Skill",
+                "QoD_Skill", "Counter_Action_Skill",
+            
+                # 11. Misc / Metadata
+                "Team_ID", "Player_ID", "Event", "Video",
+                "Technical_Point", "All_Out", "YC_Extra", "Video_Link", "Tie_Break_Raids"
             ]
-
+            
+            # Apply the new column order
             df = df[new_order]
+  
             
             # ---------------- Updating Points Columns ----------------
 
@@ -1195,6 +1204,7 @@ if uploaded_file:
         except Exception as e:
             sys.stdout = sys.__stdout__
             st.error(f"❌ An error occurred: {e}")
+
 
 
 
