@@ -1113,7 +1113,7 @@ if uploaded_file:
                 print("QC 21: ✅ All rows are correct.\n")
 
 
-           # --- QC 22 QoD_Skill & Outcome Alignment Check ---
+            # --- QC 22 QoD_Skill & Outcome Alignment Check ---
 
             # --- 1. Define Boolean Masks ---
             # A value is considered "present" if the cell is not null, empty, or just whitespace.
@@ -1140,8 +1140,17 @@ if uploaded_file:
                 if not type_2_issues.empty:
                     print(f"❌ {type_2_issues['Event_Number'].tolist()} → Raid is Successful but QoD_Skill is present, should be None.\n")
 
-
 # =========================================================================
+            
+            # Event_Number formatting
+            df['Event_Number'] = (
+                df['Event_Number']
+                .str.extract(r'(\d+)')[0]      # Extract only the digits
+                .astype(int)                    # Convert to integer
+                .map(lambda x: f"E{x:03d}")     # Format each value
+            )
+# ======================================================================================
+# ======================================================================================
 
             # Example: saving final processed dataframe
             df.to_csv(output_file_name, index=False)
@@ -1204,10 +1213,6 @@ if uploaded_file:
         except Exception as e:
             sys.stdout = sys.__stdout__
             st.error(f"❌ An error occurred: {e}")
-
-
-
-
 
 
 
