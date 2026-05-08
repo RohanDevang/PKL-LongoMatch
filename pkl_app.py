@@ -613,15 +613,10 @@ if uploaded_file:
                 """Return True if a value is NaN, None, or a blank/whitespace string."""
                 return pd.isna(value) or str(value).strip() == ""
 
-
+            
             def _non_empty_cols(row, columns: list[str]) -> list[str]:
                 """Return column names from *columns* that have a non-empty value in *row*."""
                 return [c for c in columns if not _is_empty(getattr(row, c))]
-
-
-            def _empty_cols(row, columns: list[str]) -> list[str]:
-                """Return column names from *columns* that are empty in *row*."""
-                return [c for c in columns if _is_empty(getattr(row, c))]
 
 
             def _col_is_empty(series: pd.Series) -> pd.Series:
