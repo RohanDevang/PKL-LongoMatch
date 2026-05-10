@@ -98,7 +98,6 @@ if uploaded_file:
                 'Technical Point Raiding','All Out', *(f'RL{i}' for i in range(1, 31)),
                 'Raider self out','Running Bonus','Centre Bonus','LCorner','LIN','LCover','Center',
                 'RCover','RIN','RCorner','Flying Touch','Double Thigh Hold','Flying Reach','Clean','Not Clean',
-                # Extra 4 columns
                 'Yes','No','Z10','Z11','First Half','Second Half','Technical Point Defending']
 
             if len(df.columns) == len(new_col_names):
@@ -134,14 +133,17 @@ if uploaded_file:
                                'Technical Point Defending': 'Technical_Point_Defending_Team',
                                'All Out': 'All_Out'}, inplace=True)
 
-        
             # ------ Number_of_Defenders ------
 
             defender_cols = ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7']
+
             for idx, col in enumerate(defender_cols, 1):
+
                 df[col] = pd.to_numeric(df[col].astype(str).str.strip().replace('', '0'),
                                         errors='coerce').fillna(0).astype(int)
+                
                 df[col] = (df[col] == 1).astype(int) * idx
+
             df['Number_of_Defenders'] = df[defender_cols].sum(axis=1).astype(int)
             df.drop(columns=defender_cols, inplace=True)
 
@@ -158,8 +160,7 @@ if uploaded_file:
             df['Unsuccessful'] = df['Unsuccessful'].map({1: 'Unsuccessful', 0: ''})
 
             # 3. Safely join non-empty labels
-            df['Outcome'] = df[['Successful', 'Empty', 'Unsuccessful']].apply(
-                lambda row: ' '.join(val for val in row if val != ''), axis=1)
+            df['Outcome'] = df[['Successful', 'Empty', 'Unsuccessful']].apply(lambda row: ' '.join(filter(None, row)), axis=1)
 
             df.drop(['Successful', 'Empty', 'Unsuccessful'], axis=1, inplace=True)
 
@@ -182,6 +183,7 @@ if uploaded_file:
 
             # If all are 0 → set Bonus to "No"
             df_bonus.loc[(df_bonus[['Bonus', 'No Bonus']] == '').all(axis=1),'Bonus'] = 'No'
+
             df_bonus.drop(columns=['No Bonus', 'Centre Bonus', 'Running Bonus'], inplace=True)
 
 
@@ -198,7 +200,7 @@ if uploaded_file:
                 df[col] = df[col].map({1: col, 0: ''})
 
             # Join them safely
-            df['Type_of_Bonus'] = df[bonus_cols].apply(lambda x: ' '.join(v for v in x if v != ''), axis=1)
+            df['Type_of_Bonus'] = df[bonus_cols].apply(lambda x: ' '.join(filter(None, x)), axis=1)
 
             # Drop original raw bonus columns
             df.drop(columns=bonus_cols + ['No Bonus'], inplace=True, errors='ignore')
@@ -220,8 +222,7 @@ if uploaded_file:
                 df[col] = df[col].map({1: col, 0: ''})
 
             # Join zone names cleanly
-            df['Zone_of_Action'] = df[zone_cols].apply(
-                lambda x: ' '.join(v for v in x if v != ''), axis=1)
+            df['Zone_of_Action'] = df[zone_cols].apply(lambda x: ' '.join(filter(None, x)), axis=1)
 
             df.drop(columns=zone_cols, inplace=True)
 
@@ -247,6 +248,7 @@ if uploaded_file:
             # ----------- Defending_Team_Points -----------
 
             dt_cols = ['DT0', 'DT1', 'DT2', 'DT3', 'DT4']
+
             for col in dt_cols:
                 df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0).astype(int)
                 num = int(col.replace("DT", ""))
@@ -271,8 +273,7 @@ if uploaded_file:
                 df[col] = df[col].map({1: col, 0: ''})
 
             # 3. Join all non-empty skills into a single string
-            df['Attacking_Skill'] = df[att_skill_cols].apply(
-            lambda x: ', '.join([v for v in x if v != '']).strip(), axis=1)
+            df['Attacking_Skill'] = df[att_skill_cols].apply(lambda x: ', '.join(filter(None, x)), axis=1)
 
             df.drop(columns=att_skill_cols, inplace=True)
 
@@ -292,8 +293,7 @@ if uploaded_file:
                 df[col] = df[col].map({1: col, 0: ''})
 
             # 3. Join all non-empty skills into a single string
-            df['Defensive_Skill'] = df[ds_skill_cols].apply(
-                lambda x: ', '.join([v for v in x if v != '']).strip(), axis=1)
+            df['Defensive_Skill'] = df[ds_skill_cols].apply(lambda x: ', '.join(filter(None, x)), axis=1)
 
             df.drop(columns=ds_skill_cols, inplace=True)
 
@@ -301,6 +301,7 @@ if uploaded_file:
             # ------------ Number_of_Defenders_Self_Out --------------
 
             dso_cols = ['DS0', 'DS1', 'DS2', 'DS3']
+
             for col in dso_cols:
                 df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0).astype(int)
                 num = int(col.replace("DS", ""))
@@ -324,8 +325,8 @@ if uploaded_file:
                 df[col] = df[col].map({1: col, 0: ''})
 
             # 3. Join all non-empty skills into a single string
-            df['Counter_Action_Skill'] = df[ca_cols].apply(
-                lambda x: ', '.join([v for v in x if v != '']).strip(), axis=1)
+            df['Counter_Action_Skill'] = df[ca_cols].apply(lambda x: ', '.join(filter(None, x)), axis=1)
+
             df.drop(columns=ca_cols, inplace=True)
 
 
@@ -343,8 +344,8 @@ if uploaded_file:
                 df[col] = df[col].map({1: col, 0: ''})
 
             # 3. Join all non-empty skills into a single string
-            df['Defender_Position'] = df[def_pos_cols].apply(
-                lambda x: ', '.join([v for v in x if v != '']).strip(), axis=1)
+            df['Defender_Position'] = (df[def_pos_cols].apply(lambda row: ', '.join(filter(None, row)), axis=1))
+            
             df.drop(columns=def_pos_cols, inplace=True)
 
             
@@ -361,8 +362,7 @@ if uploaded_file:
                 df[col] = df[col].map({1: col, 0: ''})
 
             # 3. Join all non-empty skills into a single string
-            df['QoD_Skill'] = df[qod_cols].apply(
-                lambda x: ', '.join([v for v in x if v != '']).strip(), axis=1)
+            df['QoD_Skill'] = df[qod_cols].apply(lambda x: ', '.join(filter(None, x)), axis=1)
 
             df.drop(columns=qod_cols, inplace=True)
 
@@ -395,8 +395,7 @@ if uploaded_file:
                 df[col] = df[col].map({1: col, 0: ''})
 
             # 3. Join all non-empty skills into a single string
-            df['Half'] = df[half_cols].apply(
-                lambda x: ', '.join([v for v in x if v != '']).strip(), axis=1)
+            df['Half'] = df[half_cols].apply(lambda x: ', '.join(filter(None, x)), axis=1)
 
             # 4 Remove ' Half'
             df['Half'] = df['Half'].str.replace(' Half', '', regex=False)
@@ -474,8 +473,7 @@ if uploaded_file:
                 df[col] = df[col].map({1: col, 0: ''})
 
             # 3. Join all non-empty skills into a single string
-            df['Tie_Break_Raids'] = df[tie_cols].apply(
-                lambda x: ', '.join([v for v in x if v != '']).strip(), axis=1)
+            df['Tie_Break_Raids'] = df[tie_cols].apply(lambda x: ', '.join(filter(None, x)), axis=1)
 
             df.drop(columns=tie_cols, inplace=True)
 
@@ -595,12 +593,12 @@ if uploaded_file:
             # Defending_Self_Out_Points
             df['Defending_Self_Out_Points'] = df["Raider_Self_Out"]
 
+            # Copy Outcome to Event
+            df['Event'] = df['Outcome']
+
             # Convert Technical Points to numeric
             tech_cols = ["Technical_Point_Raiding_Team", "Technical_Point_Defending_Team"]
             df[tech_cols] = df[tech_cols].apply(pd.to_numeric, errors="coerce").astype("Int64")
-
-            # Copy Outcome to Event
-            df['Event'] = df['Outcome']
 
 
             ######## Quality Check #########
@@ -613,7 +611,7 @@ if uploaded_file:
                 """Return True if a value is NaN, None, or a blank/whitespace string."""
                 return pd.isna(value) or str(value).strip() == ""
 
-            
+
             def _non_empty_cols(row, columns: list[str]) -> list[str]:
                 """Return column names from *columns* that have a non-empty value in *row*."""
                 return [c for c in columns if not _is_empty(getattr(row, c))]
@@ -672,8 +670,8 @@ if uploaded_file:
                 """QC 2: Key columns must not be Empty."""
                 required_cols = [
                     "Raid_Length", "Outcome", "Bonus", "All_Out", "Half","Raid_Number", "Raider_Name", "Number_of_Defenders",
-                    "Technical_Point_Raiding_Team", "Technical_Point_Defending_Team", "Tie_Break_Raids",
-                ]
+                    "Technical_Point_Raiding_Team", "Technical_Point_Defending_Team", "Tie_Break_Raids"]
+                
                 empty_mask = pd.DataFrame({c: _col_is_empty(df[c]) for c in required_cols})
                 invalid = empty_mask.any(axis=1)
 
@@ -1246,7 +1244,7 @@ if uploaded_file:
                 + "-Raid " + df['Match_Raid_Number'].astype(int).astype(str).str.zfill(3)
                 + ".mp4")
             
-            # ──────────────────────────────────────────────           
+            # ──────────────────────────────────────────────
             # Finalize and Prepare Excel-Formatting for Download
             # ──────────────────────────────────────────────
 
@@ -1263,39 +1261,30 @@ if uploaded_file:
             ws.freeze_panes = "A2"
 
             # Styles
-            center_align = Alignment(horizontal="center", vertical="center")
-            # header_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
-            header_font = Font(bold=True)
-            no_border = Border()
+            center = Alignment(horizontal="center", vertical="center")
+            bold = Font(bold=True)
 
-            # Apply styles to all cells
-            for row in ws.iter_rows():
-                for cell in row:
-                    cell.alignment = center_align
-                    cell.border = no_border
+            # Apply styles + auto width
+            for col in ws.columns:
+                max_len = 0
+                col_letter = col[0].column_letter
 
-            # Header styling
-            for cell in ws[1]:
-                # cell.fill = header_fill
-                cell.font = header_font
+                for cell in col:
+                    cell.alignment = center
+                    cell.border = Border()
 
-            # Add filter
+                    if cell.row == 1:
+                        cell.font = bold
+
+                    if cell.value:
+                        max_len = max(max_len, len(str(cell.value)))
+
+                ws.column_dimensions[col_letter].width = min(max_len + 5, 50)
+
+            # Add filters
             ws.auto_filter.ref = ws.dimensions
 
-            # Auto-adjust column width
-            for col in ws.columns:
-                col_letter = col[0].column_letter
-                max_length = len(str(col[0].value)) if col[0].value else 0
-                for cell in col:
-                    try:
-                        if cell.value:
-                            max_length = max(max_length, len(str(cell.value)))
-                    except:
-                        pass
-                adjusted_width = max_length + 5
-                ws.column_dimensions[col_letter].width = min(adjusted_width, 50)
-
-            # Save formatted workbook back to buffer
+            # Save back to buffer
             excel_buffer = io.BytesIO()
             wb.save(excel_buffer)
             excel_buffer.seek(0)
@@ -1355,3 +1344,4 @@ if uploaded_file:
         except Exception as e:
             sys.stdout = sys.__stdout__
             st.error(f"❌ An error occurred: {e}")
+            
