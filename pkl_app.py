@@ -735,7 +735,7 @@ if uploaded_file:
                     for idx, row in df.loc[invalid].iterrows():
                         missing = [c for c in check_cols if _is_empty(row[c])]
 
-                        print(f"❌ {row['Event_Number']}: When Outcome='{row['Outcome']}', Bonus='No', No 'Raider Self Out' ⟶ Missing: {', '.join(missing)}.\n")
+                        print(f"❌ {row['Event_Number']}: When Outcome='{row['Outcome']}', No Bonus, No 'Raider Self Out' ⟶ Missing: {', '.join(missing)}.\n")
                 else:
                     print("QC 4: ✅ All rows are Valid.\n")
 
@@ -871,7 +871,7 @@ if uploaded_file:
                 bad = df["Raid_Length"] <= 2
                 if bad.any():
                     for idx in df.index[bad]:
-                        print(f"⚠️ {df.at[idx, 'Event_Number']}: Raid Length is {df.at[idx, 'Raid_Length']}\n")
+                        print(f"⚠️ {df.at[idx, 'Event_Number']}: 'Raid Length' is {df.at[idx, 'Raid_Length']}\n")
                 else:
                     print("QC 12: ✅ All rows have valid Raid Length values.\n")
 
@@ -882,7 +882,7 @@ if uploaded_file:
                 if bad.any():
                     for idx in df.index[bad]:
 
-                        print(f"❌ {df.at[idx, 'Event_Number']}: Number of Defenders is --> {df.at[idx, 'Number_of_Defenders']}, Check \n")
+                        print(f"❌ {df.at[idx, 'Event_Number']}: 'Number of Defenders' is --> {df.at[idx, 'Number_of_Defenders']}, Check \n")
                 else:
                     print("QC 13: ✅ All rows are Valid.\n")
 
@@ -948,7 +948,7 @@ if uploaded_file:
                 fail_no_def = df[~has_defender & has_position]
 
                 if fail_no_pos.empty and fail_no_def.empty:
-                    print("QC 17: ✅ All defender-position mappings are consistent.\n")
+                    print("QC 17: ✅ All 'Defender Positions' are consistent.\n")
                 else:
                     for event in fail_no_pos["Event_Number"]:
                         print(f"❌ {event}: Defender(s) present but 'Defender Position' is empty.\n")
@@ -968,7 +968,7 @@ if uploaded_file:
                 type2 = df[is_unsuccessful & has_qod & ~has_def]
 
                 if type1.empty and type2.empty:
-                    print("QC 18: ✅ Defensive_Skill and QoD_Skill are aligned correctly.\n")
+                    print("QC 18: ✅ 'Defensive Skill' and 'QoD Skill' are aligned correctly.\n")
                 else:
                     if not type1.empty:
                         print(f"❌ {type1['Event_Number'].tolist()} → 'Defensive Skill' present but 'QoD Skill' missing.\n")
@@ -1005,7 +1005,7 @@ if uploaded_file:
 
                 if not bad.empty:
                     for _, row in bad.iterrows():
-                        print(f"❌ {row['Event_Number']}: →  Zone of Action is Empty.\n")
+                        print(f"❌ {row['Event_Number']}: →  'Zone of Action' is Empty.\n")
                 else:
                     print(" QC 20: ✅ All rows are Valid.\n")
 
@@ -1044,8 +1044,7 @@ if uploaded_file:
                 for _, row in filtered.iterrows():
                     for col in skill_cols:
                         if not _is_empty(row[col]):
-                            print(f"❌ {row['Event_Number']}: When Outcome='Successful', Bonus='Yes', "
-                                  f"Attacking Points = 1, all skill columns must be Empty. But '{col}' has value '{row[col]}'.\n")
+                            print(f"❌ {row['Event_Number']}: When Outcome = 'Successful', Bonus = 'Yes', Attacking Points = 1, all Skill columns must be Empty. But '{col}' has value '{row[col]}'.\n")
                             issues_found = True
 
                 if not issues_found:
@@ -1079,9 +1078,11 @@ if uploaded_file:
                     if i == 0 and val != "First":
                         print(f"❌ {evt}: Sequence must start with 'First'.\n")
                         errors_found = True
+                        
                     elif last_val == "Second" and val == "First":
                         print(f"❌ {evt}: Wrong value in 'Half'.\n")
                         errors_found = True
+                        
                     elif val not in ("First", "Second"):
                         print(f"❌ {evt}: Invalid value in 'Half' column.\n")
                         errors_found = True
@@ -1155,7 +1156,7 @@ if uploaded_file:
                     attacking_invalid = not (_is_empty(attacking) or attacking == 'Defender self out')
             
                     if any([qod_invalid, counter_invalid, attacking_invalid]):
-                        print(f"❌ {row['Event_Number']}: When 'Raider Self Out' -> 'QoD Skill' & 'Counter Action Skill' must be Empty, and 'Attacking Skill' must be 'Defender self out' or empty.\n")
+                        print(f"❌ {row['Event_Number']}: When 'Raider Self Out' --> 'QoD Skill' & 'Counter Action Skill' must be Empty, and 'Attacking Skill' must be 'Defender self out' or Empty.\n")
                         errors_found = True
             
                 if not errors_found:
