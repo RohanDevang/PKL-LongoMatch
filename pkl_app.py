@@ -430,15 +430,17 @@ if uploaded_file:
             
         
             # ---------------- Time -----------------
-
+            
             # Remove milliseconds
             start_str = df['Start'].str.split(',').str[0]
             stop_str  = df['Stop'].str.split(',').str[0]
+            
+            # Ensure hh:mm:ss format
+            fix = lambda s: s.where(s.str.count(':') == 2, '00:' + s)
 
-            # Convert mm:ss → hh:mm:ss
-            start = pd.to_timedelta('00:' + start_str)
-            stop  = pd.to_timedelta('00:' + stop_str)
-
+            start = pd.to_timedelta(fix(start_str))
+            stop  = pd.to_timedelta(fix(stop_str))
+            
             # Duration in seconds
             dur = (stop - start).dt.total_seconds()
 
@@ -678,7 +680,7 @@ if uploaded_file:
                 if invalid.any():
                     for idx in df.index[invalid]:
                         bad = empty_mask.loc[idx][empty_mask.loc[idx]].index.tolist()
-                        print(f"\n❌ {df.at[idx, 'Event_Number']}: Empty in → {', '.join(bad)}")
+                        print(f"\n❌ {df.at[idx, 'Event_Number']}: Empty in → {', '.join(bad)}\n")
                 else:
                     print("\nQC 2: ✅ All rows are Valid.\n")
 
