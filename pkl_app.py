@@ -1176,8 +1176,8 @@ if uploaded_file:
                     return
                 for _, row in flagged.iterrows():
                     msg = " and ".join(filter(None, [
-                        "In 'Tie Break Raid' 'Number of Defenders' must be 7" if row["Number_of_Defenders"] != 7 else None,
-                        "In 'Tie Break Raid' 'Raid Number' must be 1" if row["Raid_Number"] != 1 else None]))
+                        "In 'Tie Break Raid' --> 'Number of Defenders' must be 7" if row["Number_of_Defenders"] != 7 else None,
+                        "In 'Tie Break Raid' --> 'Raid Number' must be 1" if row["Raid_Number"] != 1 else None]))
                     print(f"❌ {row['Event_Number']}: {msg}.\n")
 
             
