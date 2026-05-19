@@ -1164,6 +1164,23 @@ if uploaded_file:
                 if not errors_found:
                     print("QC 28: ✅ All rows are Valid.\n")
 
+
+            def qc_29_tie_break_raids_check(df) -> None:
+                """QC 29: When Half = 'Tie Break Raid', Number_of_Defenders must be 7 and Raid_Number must be 1."""
+
+                mask = ((df["Half"] == "Tie Break Raid") & ((df["Number_of_Defenders"] != 7) | (df["Raid_Number"] != 1)))
+                flagged = df[mask]
+
+                if flagged.empty:
+                    print("QC 29: ✅ All rows are Valid.\n")
+                    return
+                for _, row in flagged.iterrows():
+                    msg = " and ".join(filter(None, [
+                        "'Number of Defenders' must be 7" if row["Number_of_Defenders"] != 7 else None,
+                        "'Raid Number' must be 1" if row["Raid_Number"] != 1 else None]))
+                    print(f"❌ {row['Event_Number']}: {msg}.\n")
+
+            
             # ---------------------------------------------
             #  Main Runner
             # ---------------------------------------------
@@ -1200,6 +1217,7 @@ if uploaded_file:
                 qc_26_defensive_skill_needs_defender(df)
                 qc_27_bonus_restriction_by_defender_count(df)
                 qc_28_raider_self_out_check(df)
+                qc_29_tie_break_raids_check(df)
 
             run_all_quality_checks(df)
 
